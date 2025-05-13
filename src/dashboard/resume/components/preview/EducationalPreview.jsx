@@ -1,6 +1,13 @@
 import React from "react";
 
 function EducationalPreview({ resumeInfo }) {
+  const getMonthYear = (dateString) => {
+    const date = new Date(dateString);
+    const year = date.getFullYear();
+    const month = date.toLocaleString("default", { month: "short" }); // Full month name
+    return `${month} ${year}`;
+  };
+
   return (
     <div className="my-6">
       <h2
@@ -22,7 +29,9 @@ function EducationalPreview({ resumeInfo }) {
             {education.degree && `${education.degree} in ${education.major}`}
             <span>
               {education.degree &&
-                `${education.startDate} - ${education.endDate}`}
+                `${getMonthYear(education.startDate)} - ${getMonthYear(
+                  education.endDate
+                )}`}
             </span>
           </h2>
           <p className="text-xs my-2">{education.description}</p>

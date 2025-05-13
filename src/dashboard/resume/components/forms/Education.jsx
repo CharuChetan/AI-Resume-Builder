@@ -17,7 +17,7 @@ const formFields = {
   description: "",
 };
 
-function Education() {
+function Education({ enableNext }) {
   const [loading, setLoading] = useState(false);
   const [educationalList, setEducationalList] = useState([formFields]);
   const { resumeInfo, setResumeInfo } = useContext(ResumeInfoContext);
@@ -35,6 +35,7 @@ function Education() {
   }, [educationalList]);
 
   const handleChange = (event, index) => {
+    enableNext(false);
     const newEntries = educationalList.slice();
     const { name, value } = event.target;
     newEntries[index][name] = value;
@@ -60,6 +61,7 @@ function Education() {
       (resp) => {
         console.log(resp);
         setLoading(false);
+        enableNext(true);
         toast("Details updated !");
       },
       (error) => {

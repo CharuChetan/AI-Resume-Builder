@@ -7,6 +7,8 @@ import { useParams } from "react-router-dom";
 import { UpdateResumeDetails } from "../../../../../services/GlobalApi";
 import { toast } from "sonner";
 import { LoaderCircle } from "lucide-react";
+import { Checkbox } from "@/components/ui/checkbox";
+
 const formFields = {
   title: "",
   companyName: "",
@@ -17,13 +19,14 @@ const formFields = {
   workSummery: "",
 };
 
-function Experience() {
+function Experience({ enableNext }) {
   const [experienceList, setExperienceList] = useState([formFields]);
   const [loading, setLoading] = useState(false);
   const params = useParams();
   const { resumeInfo, setResumeInfo } = useContext(ResumeInfoContext);
 
   const handleInputChange = (index, event) => {
+    enableNext(false);
     const newEntries = [...experienceList];
     const { name, value } = event.target;
     newEntries[index][name] = value;
@@ -51,9 +54,17 @@ function Experience() {
   }, [experienceList]);
 
   const handleRichTextEditor = (e, name, index) => {
+    enableNext(false);
     const newEntries = experienceList.slice();
     newEntries[index][name] = e.target.value;
 
+    setExperienceList(newEntries);
+  };
+
+  const handleCheckboxChange = (index, name, checked) => {
+    enableNext(false);
+    const newEntries = experienceList.slice();
+    newEntries[index][name] = checked;
     setExperienceList(newEntries);
   };
 
@@ -65,12 +76,11 @@ function Experience() {
       },
     };
 
-    console.log(experienceList);
-
     UpdateResumeDetails(params?.resumeId, data).then(
       (res) => {
         console.log(res);
         setLoading(false);
+        enableNext(true);
         toast("Details updated !");
       },
       (error) => {
@@ -136,7 +146,19 @@ function Experience() {
                   name="endDate"
                   onChange={(event) => handleInputChange(index, event)}
                   defaultValue={item?.endDate}
+                  disabled={item?.currentlyWorking}
                 />
+              </div>
+              <div className="flex items-center col-span-2">
+                <Checkbox
+                  name="currentlyWorking"
+                  checked={item?.currentlyWorking}
+                  onCheckedChange={(checked) =>
+                    handleCheckboxChange(index, "currentlyWorking", checked)
+                  }
+                  className="h-4 w-4"
+                />
+                <label className="text-xs mx-2">Currently Working</label>
               </div>
               <div className="col-span-2">
                 {/* Work Summery  */}

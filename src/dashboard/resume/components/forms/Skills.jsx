@@ -9,7 +9,7 @@ import { ResumeInfoContext } from "@/context/ResumeInfoContext";
 import { UpdateResumeDetails } from "../../../../../services/GlobalApi";
 import { useParams } from "react-router-dom";
 import { toast } from "sonner";
-function Skills() {
+function Skills({ enableNext }) {
   const [skillsList, setSkillsList] = useState([
     {
       name: "",
@@ -26,6 +26,7 @@ function Skills() {
   }, []);
 
   const handleChange = (index, name, value) => {
+    enableNext(false);
     const newEntries = skillsList.slice();
     newEntries[index][name] = value;
     setSkillsList(newEntries);
@@ -56,6 +57,7 @@ function Skills() {
       (resp) => {
         console.log(resp);
         setLoading(false);
+        enableNext(true);
         toast("Details updated !");
       },
       (error) => {

@@ -1,6 +1,13 @@
 import React from "react";
 
 function ExperiencePreview({ resumeInfo }) {
+  const getMonthYear = (dateString) => {
+    const date = new Date(dateString);
+    const year = date.getFullYear();
+    const month = date.toLocaleString("default", { month: "short" }); // Full month name
+    return `${month} ${year}`;
+  };
+
   return (
     <div className="my-6">
       <h2
@@ -21,8 +28,10 @@ function ExperiencePreview({ resumeInfo }) {
           <h2 className="text-xs flex justify-between">
             {experience?.companyName}, {experience?.city}, {experience?.state}
             <span>
-              {experience?.startDate} -{" "}
-              {experience?.currentlyWorking ? "Present" : experience.endDate}
+              {getMonthYear(experience?.startDate)} -{" "}
+              {experience?.currentlyWorking
+                ? "Present"
+                : getMonthYear(experience.endDate)}
             </span>
           </h2>
           {/* <p className="text-xs my-2">{experience?.workSummery}</p> */}

@@ -11,7 +11,7 @@ import ThemeColor from "./ThemeColor";
 
 function FromSection() {
   const [activeFormIndex, setActiveFormIndex] = useState(1);
-  const [enableNext, setEnableNext] = useState(false);
+  const [enableNext, setEnableNext] = useState(true);
   const { resumeId } = useParams();
   return (
     <div>
@@ -54,12 +54,16 @@ function FromSection() {
         <Summery enableNext={(v) => setEnableNext(v)} />
       )}
       {/* Professional Experience */}
-      {activeFormIndex === 3 && <Experience />}
+      {activeFormIndex === 3 && (
+        <Experience enableNext={(v) => setEnableNext(v)} />
+      )}
 
       {/* Education */}
-      {activeFormIndex === 4 && <Education />}
+      {activeFormIndex === 4 && (
+        <Education enableNext={(v) => setEnableNext(v)} />
+      )}
       {/* Skills */}
-      {activeFormIndex === 5 && <Skills />}
+      {activeFormIndex === 5 && <Skills enableNext={(v) => setEnableNext(v)} />}
       {/* Preview */}
       {activeFormIndex === 6 && <Navigate to={`/my-resume/${resumeId}/view`} />}
     </div>
