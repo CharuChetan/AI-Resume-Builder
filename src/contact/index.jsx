@@ -95,7 +95,7 @@ function Contect() {
             <p className="p-2">
               If you have any questions, please feel free to contact us at:
             </p>
-            <div className="p-2">
+            <div className="p-2 flex gap-2 flex-col">
               <p>
                 Email:<span className="font-bold"> </span>
                 <a

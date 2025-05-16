@@ -10,6 +10,9 @@ import { ClerkProvider } from "@clerk/clerk-react";
 import EditResume from "./dashboard/resume/[resumeId]/edit";
 import ViewResume from "./my-resume/[resumeId]/view";
 import Contect from "./contact";
+import TextGeneration from "./pageServices/TextGeneration";
+import VideoGeneration from "./pageServices/VideoGeneration";
+import ImageGeneration from "./pageServices/ImageGeneration";
 
 // Import your Publishable Key
 const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY;
@@ -29,6 +32,23 @@ const router = createBrowserRouter([
       {
         path: "/dashboard/resume/:resumeId/edit",
         element: <EditResume />,
+      },
+      {
+        path: "services",
+        children: [
+          {
+            path: "text-generation",
+            element: <TextGeneration />,
+          },
+          {
+            path: "image-generation",
+            element: <ImageGeneration />,
+          },
+          {
+            path: "video-generation",
+            element: <VideoGeneration />,
+          },
+        ],
       },
     ],
   },
