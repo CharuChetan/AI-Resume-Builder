@@ -30,20 +30,26 @@ function RichTextEditor({ onRichTextEditorChange, index, defaultValue }) {
   }, [defaultValue]);
 
   const GenerateSummeryFromAI = async () => {
-    if (!resumeInfo?.experience[index]?.title) {
-      toast("Please Add Position Title");
-      return;
-    }
-    setLoading(true);
-    const prompt = PROMPT.replace(
-      "{positionTitle}",
-      resumeInfo.experience[index].title
-    );
+    try {
+      if (!resumeInfo?.experience[index]?.title) {
+        toast("Please Add Position Title");
+        return;
+      }
+      setLoading(true);
+      const prompt = PROMPT.replace(
+        "{positionTitle}",
+        resumeInfo.experience[index].title
+      );
 
-    const result = await AiModal(prompt);
-    const resp = result.replace("```html", "").replace("```", "");
-    setValue(resp);
-    setLoading(false);
+      const result = await AiModal(prompt);
+      const resp = result?.replace("```html", "").replace("```", "");
+      setValue(resp);
+      setLoading(false);
+    } catch (error) {
+      console.log(error);
+      toast.error("Something went wrong");
+      setLoading(false);
+    }
   };
 
   return (

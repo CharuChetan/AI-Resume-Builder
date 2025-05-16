@@ -13,7 +13,6 @@ function ViewResume() {
   const { resumeId } = useParams();
   const GetResumeInfo = () => {
     GetResumeById(resumeId).then((res) => {
-      console.log(res);
       setResumeInfo(res?.data?.data);
     });
   };

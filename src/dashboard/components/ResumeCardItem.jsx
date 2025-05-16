@@ -8,7 +8,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { MoreVertical } from "lucide-react";
+import { LoaderCircle, MoreVertical } from "lucide-react";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -33,7 +33,6 @@ function ResumeCardItem({ resume, refreshData }) {
     // Call the delete function here
     DeleteResumeById(resume.documentId).then(
       (resp) => {
-        console.log(resp);
         // Handle success
         toast("Resume deleted successfully");
         refreshData();

@@ -55,7 +55,6 @@ function Skills({ enableNext }) {
 
     UpdateResumeDetails(resumeId, data).then(
       (resp) => {
-        console.log(resp);
         setLoading(false);
         enableNext(true);
         toast("Details updated !");

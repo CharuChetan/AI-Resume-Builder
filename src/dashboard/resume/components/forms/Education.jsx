@@ -59,7 +59,6 @@ function Education({ enableNext }) {
 
     UpdateResumeDetails(params.resumeId, data).then(
       (resp) => {
-        console.log(resp);
         setLoading(false);
         enableNext(true);
         toast("Details updated !");

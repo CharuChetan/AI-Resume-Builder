@@ -58,7 +58,7 @@ function Home() {
                 </svg>
               </a>
               <a
-                href="https://youtu.be/Q5LM985yUmQ"
+                href="#"
                 className="inline-flex justify-center items-center py-3 px-5 text-base font-medium text-center text-gray-900 rounded-lg border border-gray-300 hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 dark:text-white dark:border-gray-700 dark:hover:bg-gray-700 dark:focus:ring-gray-800"
               >
                 <svg
@@ -183,9 +183,6 @@ function Home() {
         </section>
         <section className="py-8 bg-white z-50 px-4 mx-auto max-w-screen-xl text-center lg:py-16 lg:px-12">
           <h2 className="font-bold text-3xl">How it Works?</h2>
-          <h2 className="text-md text-gray-500">
-            Give mock interview in just 3 simplar easy step
-          </h2>
 
           <div className="mt-8 grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
             <a
@@ -201,9 +198,8 @@ function Home() {
               </h2>
 
               <p className="mt-1 text-sm text-gray-600">
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Ex ut
-                quo possimus adipisci distinctio alias voluptatum blanditiis
-                laudantium.
+                A brief instruction with help of AI to guide users in filling
+                out their resume details.
               </p>
             </a>
 
@@ -214,13 +210,12 @@ function Home() {
               <Edit className="h-8 w-8" />
 
               <h2 className="mt-4 text-xl font-bold text-black">
-                Edit Your form{" "}
+                Edit Your form
               </h2>
 
               <p className="mt-1 text-sm text-gray-600">
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Ex ut
-                quo possimus adipisci distinctio alias voluptatum blanditiis
-                laudantium.
+                User Can changes or updates to an existing form to improve or
+                correct it.
               </p>
             </a>
 
@@ -235,9 +230,7 @@ function Home() {
               </h2>
 
               <p className="mt-1 text-sm text-gray-600">
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Ex ut
-                quo possimus adipisci distinctio alias voluptatum blanditiis
-                laudantium.
+                User can download & share generated resume with others.
               </p>
             </a>
           </div>

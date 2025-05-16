@@ -31,7 +31,6 @@ function Summery({ enableNext }) {
     };
     UpdateResumeDetails(resumeId, data)
       .then((res) => {
-        console.log(res);
         setLoading(false);
         enableNext(true);
         toast("Details updated successfully");
@@ -43,15 +42,21 @@ function Summery({ enableNext }) {
   };
 
   const GenerateSummeryFromAI = async () => {
-    setLoading(true);
-    enableNext(false);
-    const PROMPT = prompt.replace(
-      "{job_title}",
-      resumeInfo?.jobTitle || "Software Engineer"
-    );
-    const generateSummery = await AIModal(prompt, "application/json");
-    setAiGeneratedSummeryList(JSON.parse(generateSummery));
-    setLoading(false);
+    try {
+      setLoading(true);
+      enableNext(false);
+      const PROMPT = prompt.replace(
+        "{job_title}",
+        resumeInfo?.jobTitle || "Software Engineer"
+      );
+      const generateSummery = await AIModal(prompt, "application/json");
+      setAiGeneratedSummeryList(JSON.parse(generateSummery));
+      setLoading(false);
+    } catch (error) {
+      console.log(error);
+      toast.error("Something went wrong");
+      setLoading(false);
+    }
   };
 
   return (

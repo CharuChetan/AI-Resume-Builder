@@ -23,7 +23,6 @@ function AddResume() {
   const onCreate = () => {
     setLoading(true);
     const uuid = uuidv4();
-    console.log(resumeTitle);
     const data = {
       data: {
         title: resumeTitle,
@@ -34,7 +33,6 @@ function AddResume() {
     };
     CreateNewResume(data)
       .then((res) => {
-        console.log(res);
         if (res) {
           setLoading(false);
           navigate(`/dashboard/resume/${res?.data?.data?.documentId}/edit`);
@@ -67,7 +65,7 @@ function AddResume() {
             </DialogDescription>
             <div className="flex justify-end gap-2 mt-5">
               <Button variant="ghost" onClick={() => setOpenDialog(false)}>
-                Cancle
+                Cancel
               </Button>
               <Button disabled={!resumeTitle || loading} onClick={onCreate}>
                 {loading ? <Loader2 /> : "Create"}

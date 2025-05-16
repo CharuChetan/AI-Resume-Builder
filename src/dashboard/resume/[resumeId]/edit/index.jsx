@@ -17,7 +17,6 @@ function EditResume() {
 
   const getResumeinfo = () => {
     GetResumeById(resumeId).then((res) => {
-      console.log(res);
       setResumeInfo(res?.data?.data);
     });
   };

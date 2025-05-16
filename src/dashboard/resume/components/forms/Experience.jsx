@@ -78,7 +78,6 @@ function Experience({ enableNext }) {
 
     UpdateResumeDetails(params?.resumeId, data).then(
       (res) => {
-        console.log(res);
         setLoading(false);
         enableNext(true);
         toast("Details updated !");

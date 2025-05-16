@@ -13,10 +13,6 @@ function PersonalDetails({ enableNext }) {
   const [formData, setFormData] = React.useState({});
   const [loading, setLoading] = React.useState(false);
 
-  useEffect(() => {
-    console.log(resumeId);
-  }, [resumeId]);
-
   const handleInputChange = (e) => {
     enableNext(false);
     const { name, value } = e.target;
@@ -32,7 +28,6 @@ function PersonalDetails({ enableNext }) {
     };
     UpdateResumeDetails(resumeId, data)
       .then((res) => {
-        console.log(res);
         setLoading(false);
         enableNext(true);
         toast("Details updated successfully");

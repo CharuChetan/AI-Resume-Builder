@@ -18,10 +18,13 @@ const UpdateResumeDetails = (id, data) =>
 const GetResumeById = (id) => axiosClient.get(`user-resumes/${id}?populate=*`);
 const DeleteResumeById = (id) => axiosClient.delete(`user-resumes/${id}`);
 
+const CreateQuery = (data) => axiosClient.post("user-queries", data);
+
 export {
   CreateNewResume,
   GetAllResumes,
   UpdateResumeDetails,
   GetResumeById,
   DeleteResumeById,
+  CreateQuery,
 };

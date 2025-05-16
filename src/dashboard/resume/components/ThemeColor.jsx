@@ -30,9 +30,14 @@ function ThemeColor() {
     "#FF5733",
     "#5733FF",
     "#33FF5A",
-    "#5A33FF",
-    "#FF335A",
-    "#335AFF",
+    "#FFA07A	",
+    "#FA8072",
+    "#CD5C5C",
+    "#454545",
+    "#808080",
+    "#A9A9A9",
+    "#696969",
+    "#708090",
   ];
 
   const { resumeInfo, setResumeInfo } = useContext(ResumeInfoContext);
@@ -50,16 +55,14 @@ function ThemeColor() {
       },
     };
     UpdateResumeDetails(resumeId, data).then((resp) => {
-      console.log(resp);
       toast("Theme Color Updated");
     });
   };
 
   return (
     <Popover>
-      <PopoverTrigger asChild>
+      <PopoverTrigger>
         <Button variant="outline" size="sm" className="flex gap-2">
-          {" "}
           <LayoutGrid /> Theme
         </Button>
       </PopoverTrigger>
@@ -68,6 +71,7 @@ function ThemeColor() {
         <div className="grid grid-cols-5 gap-3">
           {colors.map((item, index) => (
             <div
+              key={index}
               onClick={() => onColorSelect(item)}
               className={`h-5 w-5 rounded-full cursor-pointer
              hover:border-black border

@@ -30,8 +30,7 @@ async function main(prompt, mimeType = "text/plain") {
   for await (const chunk of response) {
     generatedResult += chunk.text;
   }
-  console.log("Generated Result: ", response.text);
-  console.log("Generated Result: ", generatedResult);
+
   return generatedResult;
 }
 
