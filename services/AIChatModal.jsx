@@ -1,26 +1,19 @@
-import { GoogleGenAI, Type } from "@google/genai";
+// To run this code you need to install the following dependencies:
+// npm install @google/genai mime
+// npm install -D @types/node
 
-async function main(prompt, mimeType = "text/plain") {
+import { GoogleGenAI } from "@google/genai";
+
+export default async function main(contentData) {
   const ai = new GoogleGenAI({
     apiKey: import.meta.env.VITE_GOOGLE_AI_API_KEY,
   });
-
   const config = {
-    responseMimeType: mimeType,
-    systemInstruction:
-      "You are a girl. Your name is Nami and your are a all knowing bot.",
+    responseMimeType: "text/plain",
   };
   const model = "gemini-2.0-flash";
-  const contents = [
-    {
-      role: "user",
-      parts: [
-        {
-          text: prompt,
-        },
-      ],
-    },
-  ];
+  console.log("???????????????", contentData);
+  const contents = contentData;
 
   const response = await ai.models.generateContentStream({
     model,
@@ -35,5 +28,3 @@ async function main(prompt, mimeType = "text/plain") {
 
   return generatedResult;
 }
-
-export default main;

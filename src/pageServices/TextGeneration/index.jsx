@@ -1,15 +1,37 @@
 import { v4 as uuidv4 } from "uuid";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { Airplay, LoaderCircle, User, User2Icon } from "lucide-react";
-import React, { useState } from "react";
-import AIModal from "../../../services/AIModal";
+import {
+  Airplay,
+  LoaderCircle,
+  Mic,
+  Send,
+  User,
+  User2Icon,
+} from "lucide-react";
+import React, { useEffect, useState } from "react";
+import AIChatModal from "../../../services/AIChatModal";
+import useSpeechToText from "react-hook-speech-to-text";
+import { toast } from "sonner";
 
 function TextGeneration() {
   const [textData, setTextData] = useState("");
   const [queryTxt, setQueryTxt] = useState([]);
+  const [content, setContent] = useState([]);
 
-  const dataSubmit = (e) => {
+  const {
+    error,
+    interimResult,
+    isRecording,
+    results,
+    startSpeechToText,
+    stopSpeechToText,
+  } = useSpeechToText({
+    continuous: true,
+    useLegacyResults: false,
+  });
+
+  const dataSubmit = async (e) => {
     e.preventDefault();
     let queryObj = {
       id: uuidv4(),
@@ -19,19 +41,61 @@ function TextGeneration() {
     queryTxt.push(queryObj);
     setQueryTxt([...queryTxt]);
     setTextData("");
-    AIModal(textData).then((response) => {
+    const dataContent = {
+      role: "user",
+      parts: [
+        {
+          text: textData,
+        },
+      ],
+    };
+    content.push(dataContent);
+    await setContent([...content]);
+
+    AIChatModal(content).then((response) => {
+      const data = {
+        role: "model",
+        parts: [
+          {
+            text: response,
+          },
+        ],
+      };
+      content.push(data);
+      setContent(content);
       const filterData = queryTxt.find((data) => data.id === queryObj.id);
       filterData.answer = response;
       setQueryTxt([...queryTxt]);
     });
   };
 
-  const handleKeyDown = (event) => {
-    if (event.key === "Enter") {
+  const handleKeyDown = async (e) => {
+    if (e.key === "Enter") {
       // Action to perform when Enter key is pressed
-      dataSubmit();
+      await dataSubmit(e);
     }
   };
+
+  const handleMic = () => {
+    if (error) {
+      toast("Web Speech API is not available in this browser");
+    } else if (isRecording) {
+      stopSpeechToText();
+      setTextData("");
+    } else {
+      startSpeechToText();
+    }
+  };
+
+  useEffect(() => {
+    if (results) {
+      let str = "";
+      results.map((result) => {
+        str = str + result.transcript;
+      });
+      setTextData(str);
+    }
+  }, [results]);
 
   return (
     <div className="p-10 md:px-20 lg:px-32 text-gray-700">
@@ -57,30 +121,34 @@ function TextGeneration() {
                 <Airplay />
               </span>
               :{" "}
-              <span className="border p-5 shadow-lg rounded-lg bg-amber-50 justify-center items-center">
+              <pre className="border text-wrap p-5 shadow-lg rounded-lg bg-amber-50 justify-center items-center">
                 {query.answer}
-              </span>
+              </pre>
             </div>
           </>
         ))}
       </div>
-
       <form onSubmit={dataSubmit}>
-        <div className="grid grid-cols-8 md:grid-cols-8 pt-10 gap-10">
+        <div className="grid grid-cols-8 md:grid-cols-8 pt-10 gap-5">
           <div className="col-span-7 flex justify-between items-center">
             <Textarea
               value={textData}
               onChange={(e) => setTextData(e.target.value)}
+              placeholder="Type your message here."
+              onKeyDown={handleKeyDown}
             />
           </div>
-          <div className="flex justify-between items-center">
+          <div className="flex justify-items-center items-center gap-2">
             <Button
-              type="submit"
               size="lg"
-              className="px-9"
-              onKeyDown={handleKeyDown}
+              type="button"
+              onClick={handleMic}
+              className={isRecording ? "animate-pulse text-red-400" : ""}
             >
-              Enter
+              <Mic />
+            </Button>
+            <Button type="submit" size="lg" className="px-9">
+              <Send />
             </Button>
           </div>
         </div>

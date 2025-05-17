@@ -49,7 +49,7 @@ function Summery({ enableNext }) {
         "{job_title}",
         resumeInfo?.jobTitle || "Software Engineer"
       );
-      const generateSummery = await AIModal(prompt, "application/json");
+      const generateSummery = await AIModal(PROMPT, "application/json");
       setAiGeneratedSummeryList(JSON.parse(generateSummery));
       setLoading(false);
     } catch (error) {

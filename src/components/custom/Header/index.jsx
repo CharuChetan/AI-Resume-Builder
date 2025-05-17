@@ -15,10 +15,10 @@ import {
 } from "@/components/ui/navigation-menu";
 
 function Header() {
-  const { isSignedIn, user } = useUser();
+  const { isSignedIn } = useUser();
 
   return (
-    <div className="p-3 px-5 flex justify-between shadow-md">
+    <div className="p-3 px-5 flex justify-between shadow-md items-center">
       <Link to="/">
         <img src="/logo.svg" width={100} height={100} />
       </Link>
@@ -49,9 +49,9 @@ function Header() {
                   <NavigationMenuLink>
                     <Link to="/services/image-generation">AI Image Maker</Link>
                   </NavigationMenuLink>
-                  <NavigationMenuLink>
+                  {/* <NavigationMenuLink>
                     <Link to="/services/video-generation">AI Video Maker</Link>
-                  </NavigationMenuLink>
+                  </NavigationMenuLink> */}
                 </NavigationMenuContent>
               </NavigationMenuItem>
             </NavigationMenuList>

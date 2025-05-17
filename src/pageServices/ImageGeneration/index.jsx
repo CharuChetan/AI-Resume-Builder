@@ -1,15 +1,37 @@
 import { v4 as uuidv4 } from "uuid";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { Airplay, LoaderCircle, User, User2Icon } from "lucide-react";
-import React, { useState } from "react";
-import AIModal from "../../../services/AIModal";
+import {
+  Airplay,
+  LoaderCircle,
+  Mic,
+  Send,
+  User,
+  User2Icon,
+} from "lucide-react";
+import React, { useEffect, useState } from "react";
+import { GenerateImage } from "../../../services/ImageModal";
+import useSpeechToText from "react-hook-speech-to-text";
+import { toast } from "sonner";
 
 function ImageGeneration() {
   const [textData, setTextData] = useState("");
   const [queryTxt, setQueryTxt] = useState([]);
+  const [content, setContent] = useState([]);
 
-  const dataSubmit = (e) => {
+  const {
+    error,
+    interimResult,
+    isRecording,
+    results,
+    startSpeechToText,
+    stopSpeechToText,
+  } = useSpeechToText({
+    continuous: true,
+    useLegacyResults: false,
+  });
+
+  const dataSubmit = async (e) => {
     e.preventDefault();
     let queryObj = {
       id: uuidv4(),
@@ -19,56 +41,128 @@ function ImageGeneration() {
     queryTxt.push(queryObj);
     setQueryTxt([...queryTxt]);
     setTextData("");
-    AIModal(textData).then((response) => {
-      //   queryObj = {
-      //     ...queryObj,
-      //     answer: response,
-      //   };
+    const dataContent = {
+      role: "user",
+      parts: [
+        {
+          text: textData,
+        },
+      ],
+    };
+    content.push(dataContent);
+    await setContent([...content]);
+    GenerateImage(content).then(async (response) => {
+      const data = {
+        role: "model",
+        parts: response.data.candidates[0].content.parts,
+      };
+      content.push(data);
+      setContent([...content]);
       const filterData = queryTxt.find((data) => data.id === queryObj.id);
-      filterData.answer = response;
+      filterData.answer = response.data.candidates[0].content.parts;
+      console.log(queryTxt);
       setQueryTxt([...queryTxt]);
     });
   };
+
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter") {
+      // Action to perform when Enter key is pressed
+      dataSubmit(e);
+    }
+  };
+
+  const handleMic = () => {
+    if (error) {
+      toast("Web Speech API is not available in this browser");
+    } else if (isRecording) {
+      stopSpeechToText();
+    } else {
+      startSpeechToText();
+    }
+  };
+
+  useEffect(() => {
+    if (results) {
+      let str = "";
+      results.map((result) => {
+        str = str + result.transcript;
+      });
+      setTextData(str);
+    }
+  }, [results, interimResult]);
+
   return (
     <div className="p-10 md:px-20 lg:px-32 text-gray-700">
       <h2 className="font-bold text-3xl">Your AI Art Studio</h2>
       <p>Turn your words into awesome visuals with a little help from AI.</p>
-      <div className="flex gap-10 flex-col mt-10 p-10 bg-gradient-to-b from-pink-100 via-purple-200 to-blue-200 h-[500px] rounded-lg overflow-y-auto">
-        {queryTxt.map((query) => (
-          <>
-            <div className="flex h-auto items-center gap-2">
-              <span className="basis-3">
-                <User2Icon />
-              </span>
-              :{" "}
-              <span className="border p-5 shadow-lg rounded-lg bg-amber-50 justify-center items-center">
-                {query.question}
-              </span>
-            </div>
-            <div className="flex h-auto items-center gap-2 flex-row-reverse float-end">
-              <span className="basis-3">
-                <Airplay />
-              </span>
-              :{" "}
-              <span className="border p-5 shadow-lg rounded-lg bg-amber-50 justify-center items-center">
-                {query.answer}
-              </span>
-            </div>
-          </>
-        ))}
-      </div>
 
+      <div className="flex gap-10 flex-col mt-10 p-10 bg-gradient-to-b from-pink-100 via-purple-200 to-blue-200 h-[500px] rounded-lg overflow-y-auto">
+        {queryTxt &&
+          queryTxt.map((query) => (
+            <>
+              <div className="flex h-auto items-center gap-2">
+                <span className="basis-3">
+                  <User2Icon />
+                </span>
+                :{" "}
+                <span className="border p-5 shadow-lg rounded-lg bg-amber-50 justify-center items-center">
+                  {query.question}
+                </span>
+              </div>
+              <div className="flex h-auto items-center gap-2 flex-row-reverse float-end">
+                <span className="basis-3">
+                  <Airplay />
+                </span>
+                :{" "}
+                <div className="flex flex-col gap-3 items-end">
+                  {!Array.isArray(query.answer) && (
+                    <div className="border p-5 shadow-lg rounded-lg bg-amber-50 items-center">
+                      {query.answer}
+                    </div>
+                  )}
+                  {query.answer.length > 0 &&
+                    query.answer.map((value) => {
+                      return value.inlineData ? (
+                        <div className="flex max-w-fit border p-5 shadow-lg rounded-lg bg-amber-50 float-right items-center">
+                          <img
+                            src={`data:${value.inlineData.mimeType};base64,${value.inlineData.data}`}
+                            height={300}
+                            width={300}
+                          />
+                        </div>
+                      ) : value?.text ? (
+                        <div className="flex border p-5 shadow-lg rounded-lg bg-amber-50 items-center gap-3">
+                          <strong>Prompt:</strong> <p>{value?.text}</p>
+                        </div>
+                      ) : null;
+                    })}
+                </div>
+              </div>
+            </>
+          ))}
+      </div>
       <form onSubmit={dataSubmit}>
-        <div className="grid grid-cols-6 md:grid-cols-6 pt-10 gap-10">
-          <div className="col-span-5 flex justify-between items-center">
+        <div className="grid grid-cols-8 md:grid-cols-8 pt-10 gap-5">
+          <div className="col-span-7 flex justify-between items-center">
             <Textarea
               value={textData}
               onChange={(e) => setTextData(e.target.value)}
+              placeholder="Type your message here."
+              onKeyDown={handleKeyDown}
             />
           </div>
-          <div className="flex justify-between items-center">
+          <div className="flex justify-items-center items-center gap-2">
+            <Button
+              size="lg"
+              type="button"
+              onClick={handleMic}
+              className={isRecording ? "animate-pulse text-red-400" : ""}
+            >
+              <Mic />
+            </Button>
             <Button type="submit" size="lg" className="px-9">
-              Enter
+              <Send />
             </Button>
           </div>
         </div>
