@@ -7,8 +7,6 @@ async function main(prompt, mimeType = "text/plain") {
 
   const config = {
     responseMimeType: mimeType,
-    systemInstruction:
-      "You are a girl. Your name is Nami and your are a all knowing bot.",
   };
   const model = "gemini-2.0-flash";
   const contents = [

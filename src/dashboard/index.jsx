@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useCallback, useEffect } from "react";
 import AddResume from "./components/AddResume";
 import { GetAllResumes } from "../../services/GlobalApi";
 import { useUser } from "@clerk/clerk-react";
@@ -11,19 +11,19 @@ function Dashboard() {
   /**
    * @description Get all resumes of the user
    */
-  const getUserList = () => {
-    GetAllResumes(user.primaryEmailAddress.emailAddress)
+  const getUserList = useCallback(() => {
+    GetAllResumes(user?.primaryEmailAddress?.emailAddress)
       .then((res) => {
         setResumeList(res.data.data);
       })
       .catch((err) => {
         console.log(err);
       });
-  };
+  }, [user?.primaryEmailAddress?.emailAddress]);
 
   useEffect(() => {
     user && getUserList();
-  }, [user]);
+  }, [getUserList, user]);
 
   return (
     <div className="p-10 md:px-20 lg:px-32">

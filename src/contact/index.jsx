@@ -34,20 +34,20 @@ function Contect() {
     <div>
       <Header />
 
-      <div className="flex flex-wrap shadow-lg rounded-lg border-t-primary border-t-4 m-20 font-sans text-gray-700 ">
-        <div className="p-10">
+      <div className="grid grid-cols-1 md:grid-cols-2 shadow-lg rounded-lg border-t-primary border-t-4 m-20 font-sans text-gray-700 ">
+        <div className="col-span-2 px-10 pt-10">
           <h2 className="font-bold text-3xl text-gray-700">Contact Us</h2>
           <p className="text-gray-500">
             We are here to help you. Please fill out the form below and we will
             get back to you as soon as possible.
           </p>
         </div>
-        <div className="p-10 flex flex-1/2 items-center text-gray-700 font-sans justify-center">
-          <div className="m-10 p-10 w-full max-w-md rounded-lg border border-y-0">
+        <div className="grid grid-cols-1 md:grid-cols-2 col-span-2">
+          <div className="p-2 md:px-10 my-20 m-10 items-center justify-center text-gray-700 font-sans rounded-lg border border-y-0">
             <h2 className="font-bold text-2xl pb-2">Contact Form</h2>
-            <form onSubmit={saveQuery}>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
+            <form onSubmit={saveQuery} className="col-span-2">
+              <div className="grid grid-cols-2 md:grid-cols-2 gap-4">
+                <div className="col-auto">
                   <label className="text-sm">
                     Name<span className="text-red-500">*</span>
                   </label>
@@ -58,7 +58,7 @@ function Contect() {
                     onChange={handleChange}
                   />
                 </div>
-                <div>
+                <div className="col-auto">
                   <label className="text-sm">
                     Email<span className="text-red-500">*</span>
                   </label>
@@ -81,16 +81,14 @@ function Contect() {
                 </div>
                 <Button
                   type="submit"
-                  className="text-white p-2 rounded cursor-pointer"
+                  className="text-white p-2 rounded cursor-pointer col-span-2"
                 >
                   {loader ? <LoaderCircle /> : "Submit"}
                 </Button>
               </div>
             </form>
           </div>
-        </div>
-        <div className="p-10 flex flex-1/2 items-center justify-center">
-          <div className="w-full max-w-md">
+          <div className="p-2 md:px-10 m-2 md:m-10 items-center justify-center text-gray-700 font-sans">
             <h2 className="font-bold text-2xl pb-5">Contact Information</h2>
             <p className="p-2">
               If you have any questions, please feel free to contact us at:
@@ -99,22 +97,25 @@ function Contect() {
               <p>
                 Email:<span className="font-bold"> </span>
                 <a
-                  href="mailto:charuchetan.20@gmail.com"
+                  href="mailto:nexusmindin@gmail.com"
                   className="text-blue-500"
                 >
-                  example@mail.com
+                  nexusmindin@gmail.com
                 </a>
               </p>
-              <p>
+              {/* <p>
                 Phone: <span className="font-bold"> </span>
                 <a href="tel:+919999999999" className="text-blue-500">
                   +919999999999
                 </a>
-              </p>
+              </p> */}
               <p>
                 Address: <span className="font-bold"> </span>
-                <a href="https://goo.gl/maps/xyz" className="text-blue-500">
-                  1234 Street Name, City, State, Zip
+                <a
+                  href="https://goo.gl/maps/silver_towers"
+                  className="text-blue-500"
+                >
+                  100 Bleecker St, New York, NY 10013, USA
                 </a>
               </p>
               <p>Follow us on social media:</p>

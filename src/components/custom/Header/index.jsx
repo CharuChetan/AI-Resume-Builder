@@ -20,18 +20,15 @@ function Header() {
   return (
     <div className="p-3 px-5 flex justify-between shadow-md items-center">
       <Link to="/">
-        <img src="/logo.svg" width={100} height={100} />
+        <img src="/logo.png" width={120} height={120} />
       </Link>
       {isSignedIn ? (
         <div className="flex items-center gap-1">
           <NavigationMenu>
             <NavigationMenuList>
               <NavigationMenuItem>
-                <NavigationMenuLink
-                  className="NavigationMenuLink"
-                  href={"/dashboard"}
-                >
-                  Dashboard
+                <NavigationMenuLink className="NavigationMenuLink">
+                  <Link to="/dashboard">Dashboard</Link>
                 </NavigationMenuLink>
               </NavigationMenuItem>
             </NavigationMenuList>
@@ -60,11 +57,8 @@ function Header() {
           <NavigationMenu>
             <NavigationMenuList>
               <NavigationMenuItem>
-                <NavigationMenuLink
-                  className="NavigationMenuLink"
-                  href={"/contact"}
-                >
-                  Contact Us
+                <NavigationMenuLink className="NavigationMenuLink">
+                  <Link to="/contact">Contact Us</Link>
                 </NavigationMenuLink>
               </NavigationMenuItem>
             </NavigationMenuList>
@@ -79,11 +73,8 @@ function Header() {
           <NavigationMenu>
             <NavigationMenuList>
               <NavigationMenuItem>
-                <NavigationMenuLink
-                  className="NavigationMenuLink"
-                  href={"/contact"}
-                >
-                  Contact Us
+                <NavigationMenuLink className="NavigationMenuLink">
+                  <Link to="/contact">Contact Us</Link>
                 </NavigationMenuLink>
               </NavigationMenuItem>
             </NavigationMenuList>

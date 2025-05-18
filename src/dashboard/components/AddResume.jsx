@@ -51,7 +51,7 @@ function AddResume() {
       >
         <PlusSquare />
       </div>
-      <Dialog open={openDialog}>
+      <Dialog open={openDialog} onOpenChange={() => setOpenDialog(false)}>
         <DialogContent>
           <DialogHeader>
             <DialogTitle>Create new resume</DialogTitle>

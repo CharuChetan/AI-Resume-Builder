@@ -26,12 +26,13 @@ function ExperiencePreview({ resumeInfo }) {
             {experience?.title}
           </h2>
           <h2 className="text-xs flex justify-between">
-            {experience?.companyName}, {experience?.city}, {experience?.state}
+            {experience?.companyName &&
+              `${experience?.companyName}, ${experience?.city}, ${experience?.state}`}
             <span>
-              {getMonthYear(experience?.startDate)} -{" "}
+              {experience?.startDate && getMonthYear(experience?.startDate)} -{" "}
               {experience?.currentlyWorking
                 ? "Present"
-                : getMonthYear(experience.endDate)}
+                : experience.endDate && getMonthYear(experience.endDate)}
             </span>
           </h2>
           {/* <p className="text-xs my-2">{experience?.workSummery}</p> */}
