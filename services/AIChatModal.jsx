@@ -12,7 +12,6 @@ export default async function main(contentData) {
     responseMimeType: "text/plain",
   };
   const model = "gemini-2.0-flash";
-  console.log("???????????????", contentData);
   const contents = contentData;
 
   const response = await ai.models.generateContentStream({
