@@ -83,6 +83,11 @@ function ThemeColor() {
             ></div>
           ))}
         </div>
+        <div className="p-5 flex justify-center items-center">
+          <Button className="w-full" onClick={() => onColorSelect("#33A1FF")}>
+            Reset
+          </Button>
+        </div>
       </PopoverContent>
     </Popover>
   );

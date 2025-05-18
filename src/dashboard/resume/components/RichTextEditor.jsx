@@ -44,7 +44,14 @@ function RichTextEditor({ onRichTextEditorChange, index, defaultValue }) {
       const result = await AiModal(prompt);
       const resp = result?.replace("```html", "").replace("```", "");
       setValue(resp);
+      const data = {
+        target: {
+          value: resp,
+        },
+      };
+      await onRichTextEditorChange(data);
       setLoading(false);
+      toast("Please custemize you AI result.");
     } catch (error) {
       console.log(error);
       toast.error("Something went wrong");
