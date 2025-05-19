@@ -9,7 +9,7 @@ import {
   User,
   User2Icon,
 } from "lucide-react";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { GenerateImage } from "../../../services/ImageModal";
 import useSpeechToText from "react-hook-speech-to-text";
 import { toast } from "sonner";
@@ -19,6 +19,8 @@ function ImageGeneration() {
   const [queryTxt, setQueryTxt] = useState([]);
   const [content, setContent] = useState([]);
   const [recordtxt, setRecordTxt] = useState([]);
+  const [loader, setloader] = useState(false);
+  const scrollRef = useRef(null);
 
   const { error, isRecording, results, startSpeechToText, stopSpeechToText } =
     useSpeechToText({
@@ -28,6 +30,7 @@ function ImageGeneration() {
 
   const dataSubmit = async (e) => {
     e.preventDefault();
+    setloader(true);
     let queryObj = {
       id: uuidv4(),
       question: textData,
@@ -46,24 +49,38 @@ function ImageGeneration() {
     };
     content.push(dataContent);
     await setContent([...content]);
-    GenerateImage(content).then(async (response) => {
-      const data = {
-        role: "model",
-        parts: response.data.candidates[0].content.parts,
-      };
-      content.push(data);
-      setContent([...content]);
-      const filterData = queryTxt.find((data) => data.id === queryObj.id);
-      filterData.answer = response.data.candidates[0].content.parts;
-      console.log(queryTxt);
-      setQueryTxt([...queryTxt]);
-      setRecordTxt([]);
-      results.length = 0;
-      if (isRecording) {
-        stopSpeechToText();
-      }
-    });
+    GenerateImage(content)
+      .then(async (response) => {
+        const data = {
+          role: "model",
+          parts: response.data.candidates[0].content.parts,
+        };
+        content.push(data);
+        setContent([...content]);
+        const filterData = queryTxt.find((data) => data.id === queryObj.id);
+        filterData.answer = response.data.candidates[0].content.parts;
+        console.log(queryTxt);
+        setQueryTxt([...queryTxt]);
+        setRecordTxt([]);
+        setloader(false);
+        results.length = 0;
+        if (isRecording) {
+          stopSpeechToText();
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+        setloader(false);
+        toast("Something went wrong. Please refresh.");
+      });
   };
+
+  useEffect(() => {
+    // Scroll to bottom when queryTxt changes (i.e., after new result)
+    if (scrollRef.current) {
+      scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+    }
+  }, [queryTxt]);
 
   const handleKeyDown = (e) => {
     if (e.key === "Enter") {
@@ -100,7 +117,10 @@ function ImageGeneration() {
     <div className="grid grid-flow-row gap-5 p-10 md:px-20 lg:px-32 text-gray-700">
       <h2 className="font-bold text-3xl">Your AI Art Studio</h2>
       <p>Turn your words into awesome visuals with a little help from AI.</p>
-      <div className="bg-gradient-to-b from-pink-100 via-purple-200 to-blue-200 h-[500px] rounded-lg overflow-y-auto">
+      <div
+        className="bg-gradient-to-b from-pink-100 via-purple-200 to-blue-200 h-[500px] rounded-lg overflow-y-auto"
+        ref={scrollRef}
+      >
         <div className="grid grid-cols-1 gap-5 mt-10 p-5 scroll-smooth md:scroll-auto">
           {queryTxt &&
             queryTxt.map((query) => (
@@ -155,6 +175,7 @@ function ImageGeneration() {
               onChange={(e) => setTextData(e.target.value)}
               placeholder="Type your message here."
               onKeyDown={handleKeyDown}
+              disabled={loader}
             />
           </div>
           <div className="flex justify-items-center items-center gap-2">
@@ -162,11 +183,12 @@ function ImageGeneration() {
               size="lg"
               type="button"
               onClick={handleMic}
+              disabled={loader}
               className={isRecording ? "animate-pulse text-red-400" : ""}
             >
               <Mic />
             </Button>
-            <Button type="submit" size="lg" className="px-9">
+            <Button type="submit" size="lg" className="px-9" disabled={loader}>
               <Send />
             </Button>
           </div>

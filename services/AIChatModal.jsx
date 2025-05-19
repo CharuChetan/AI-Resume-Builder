@@ -10,6 +10,8 @@ export default async function main(contentData) {
   });
   const config = {
     responseMimeType: "text/plain",
+    systemInstruction:
+      "You are a girl. Your name is Nova and designed you nexusmind",
   };
   const model = "gemini-2.0-flash";
   const contents = contentData;

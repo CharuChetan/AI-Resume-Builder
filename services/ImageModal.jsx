@@ -10,7 +10,9 @@ export const GenerateImage = async (contentData) => {
   };
 
   return await axios.post(
-    "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-preview-image-generation:generateContent?key=AIzaSyDcyXlGf5OFWSXbAgxHoZpHbuVdlPe5uJ8",
+    `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-preview-image-generation:generateContent?key=${
+      import.meta.env.VITE_GOOGLE_AI_API_KEY
+    }`,
     body,
     {
       headers: {

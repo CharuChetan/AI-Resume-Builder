@@ -9,7 +9,7 @@ import {
   User,
   User2Icon,
 } from "lucide-react";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import AIChatModal from "../../../services/AIChatModal";
 import useSpeechToText from "react-hook-speech-to-text";
 import { toast } from "sonner";
@@ -19,6 +19,8 @@ function TextGeneration() {
   const [queryTxt, setQueryTxt] = useState([]);
   const [content, setContent] = useState([]);
   const [recordtxt, setRecordTxt] = useState([]);
+  const [loader, setloader] = useState(false);
+  const scrollRef = useRef(null); // Add this ref
 
   const { error, isRecording, results, startSpeechToText, stopSpeechToText } =
     useSpeechToText({
@@ -28,6 +30,7 @@ function TextGeneration() {
 
   const dataSubmit = async (e) => {
     e.preventDefault();
+    setloader(true);
     let queryObj = {
       id: uuidv4(),
       question: textData,
@@ -47,26 +50,33 @@ function TextGeneration() {
     content.push(dataContent);
     await setContent([...content]);
 
-    AIChatModal(content).then((response) => {
-      const data = {
-        role: "model",
-        parts: [
-          {
-            text: response,
-          },
-        ],
-      };
-      content.push(data);
-      setContent(content);
-      const filterData = queryTxt.find((data) => data.id === queryObj.id);
-      filterData.answer = response;
-      setQueryTxt([...queryTxt]);
-      setRecordTxt([]);
-      results.length = 0;
-      if (isRecording) {
-        stopSpeechToText();
-      }
-    });
+    AIChatModal(content)
+      .then((response) => {
+        const data = {
+          role: "model",
+          parts: [
+            {
+              text: response,
+            },
+          ],
+        };
+        content.push(data);
+        setContent(content);
+        const filterData = queryTxt.find((data) => data.id === queryObj.id);
+        filterData.answer = response;
+        setQueryTxt([...queryTxt]);
+        setRecordTxt([]);
+        setloader(false);
+        results.length = 0;
+        if (isRecording) {
+          stopSpeechToText();
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+        setloader(false);
+        toast("Something went wrong. Please refresh.");
+      });
   };
 
   const handleKeyDown = async (e) => {
@@ -100,6 +110,13 @@ function TextGeneration() {
     }
   }, [results, recordtxt, isRecording]);
 
+  useEffect(() => {
+    // Scroll to bottom when queryTxt changes (i.e., after new result)
+    if (scrollRef.current) {
+      scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+    }
+  }, [queryTxt]);
+
   return (
     <div className="grid grid-flow-row gap-5 p-10 md:px-20 lg:px-32 text-gray-700">
       <h2 className="font-bold text-3xl">Your AI Chat Bot</h2>
@@ -107,7 +124,10 @@ function TextGeneration() {
         An AI chatbot is a smart virtual buddy you can chat with to get answers,
         ideas, or just have a conversation.
       </p>
-      <div className="bg-gradient-to-b from-pink-100 via-purple-200 to-blue-200 h-[500px] rounded-lg overflow-y-auto">
+      <div
+        className="bg-gradient-to-b from-pink-100 via-purple-200 to-blue-200 h-[500px] rounded-lg overflow-y-auto"
+        ref={scrollRef}
+      >
         <div className="grid grid-cols-1 gap-5 mt-10 p-5 scroll-smooth md:scroll-auto">
           {queryTxt.map((query) => (
             <>
@@ -141,6 +161,7 @@ function TextGeneration() {
               onChange={(e) => setTextData(e.target.value)}
               placeholder="Type your message here."
               onKeyDown={handleKeyDown}
+              disabled={loader}
             />
           </div>
           <div className="flex justify-items-center items-center gap-2">
@@ -149,10 +170,11 @@ function TextGeneration() {
               type="button"
               onClick={handleMic}
               className={isRecording ? "animate-pulse text-red-400" : ""}
+              disabled={loader}
             >
               <Mic />
             </Button>
-            <Button type="submit" size="lg" className="px-9">
+            <Button type="submit" size="lg" className="px-9" disabled={loader}>
               <Send />
             </Button>
           </div>
