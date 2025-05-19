@@ -7,6 +7,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { UpdateResumeDetails } from "../../../../../services/GlobalApi";
 import { toast } from "sonner";
+import { Checkbox } from "@/components/ui/checkbox";
 
 const formFields = {
   universityName: "",
@@ -21,6 +22,7 @@ function Education({ enableNext }) {
   const [loading, setLoading] = useState(false);
   const [educationalList, setEducationalList] = useState([formFields]);
   const { resumeInfo, setResumeInfo } = useContext(ResumeInfoContext);
+  const [isEducation, setIsEducation] = useState(resumeInfo.isEducation);
   const params = useParams();
 
   useEffect(() => {
@@ -34,6 +36,10 @@ function Education({ enableNext }) {
       education: educationalList,
     });
   }, [educationalList]);
+
+  useEffect(() => {
+    setResumeInfo({ ...resumeInfo, isEducation: isEducation });
+  }, [isEducation]);
 
   const handleChange = (event, index) => {
     enableNext(false);
@@ -65,6 +71,7 @@ function Education({ enableNext }) {
     const data = {
       data: {
         education: educationalList.map(({ id, ...rest }) => rest),
+        isEducation: isEducation,
       },
     };
 
@@ -86,7 +93,22 @@ function Education({ enableNext }) {
     <div className="p-5 shadow-lg rounded-lg border-t-primary border-t-4 mt-10">
       <h2 className="font-bold text-lg">Education</h2>
       <p>Add Your educational details</p>
-
+      <div className="flex justify-items-center items-center gap-2 py-5">
+        <Checkbox
+          id="education"
+          checked={isEducation}
+          onCheckedChange={(check) => {
+            setIsEducation(check);
+            enableNext(false);
+          }}
+        />
+        <label
+          htmlFor="education"
+          className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+        >
+          Do you want to include an education section on your resume?
+        </label>
+      </div>
       <div>
         {educationalList.map((item, index) => (
           <div key={index}>

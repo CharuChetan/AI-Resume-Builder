@@ -25,6 +25,8 @@ function Experience({ enableNext }) {
   const params = useParams();
   const { resumeInfo, setResumeInfo } = useContext(ResumeInfoContext);
 
+  const [isExperince, setIsExpreince] = useState(resumeInfo.isExperince);
+
   const handleInputChange = (index, event) => {
     enableNext(false);
     const newEntries = [...experienceList];
@@ -64,6 +66,10 @@ function Experience({ enableNext }) {
     setResumeInfo({ ...resumeInfo, experience: experienceList });
   }, [experienceList]);
 
+  useEffect(() => {
+    setResumeInfo({ ...resumeInfo, isExperince: isExperince });
+  }, [isExperince]);
+
   const handleRichTextEditor = (e, name, index) => {
     enableNext(false);
     const newEntries = experienceList.slice();
@@ -84,6 +90,7 @@ function Experience({ enableNext }) {
     const data = {
       data: {
         experience: experienceList.map(({ id, ...rest }) => rest),
+        isExperince: isExperince,
       },
     };
 
@@ -105,6 +112,23 @@ function Experience({ enableNext }) {
       <div className="p-5 shadow-lg rounded-lg border-t-primary border-t-4 mt-10">
         <h2 className="font-bold text-lg">Professional Experience</h2>
         <p>Add your previous experience</p>
+        <div className="flex justify-items-center items-center gap-2 py-5">
+          <Checkbox
+            id="experience"
+            checked={isExperince}
+            onCheckedChange={(check) => {
+              setIsExpreince(check);
+              enableNext(false);
+            }}
+          />
+          <label
+            htmlFor="experience"
+            className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+          >
+            Would you like to update your resume with your professional
+            experience?
+          </label>
+        </div>
         {experienceList.map((item, index) => (
           <div key={index}>
             <div className="grid grid-col-2 gap-3 border p-3 rounded-lg my-5">
