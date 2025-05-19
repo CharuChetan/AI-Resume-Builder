@@ -93,58 +93,59 @@ function ImageGeneration() {
   }, [results, interimResult]);
 
   return (
-    <div className="p-10 md:px-20 lg:px-32 text-gray-700">
+    <div className="grid grid-flow-row gap-5 p-10 md:px-20 lg:px-32 text-gray-700">
       <h2 className="font-bold text-3xl">Your AI Art Studio</h2>
       <p>Turn your words into awesome visuals with a little help from AI.</p>
-
-      <div className="flex gap-10 flex-col mt-10 p-10 bg-gradient-to-b from-pink-100 via-purple-200 to-blue-200 h-[500px] rounded-lg overflow-y-auto">
-        {queryTxt &&
-          queryTxt.map((query) => (
-            <>
-              <div className="flex h-auto items-center gap-2">
-                <span className="basis-3">
-                  <User2Icon />
-                </span>
-                :{" "}
-                <span className="border p-5 shadow-lg rounded-lg bg-amber-50 justify-center items-center">
-                  {query.question}
-                </span>
-              </div>
-              <div className="flex h-auto items-center gap-2 flex-row-reverse float-end">
-                <span className="basis-3">
-                  <Airplay />
-                </span>
-                :{" "}
-                <div className="flex flex-col gap-3 items-end">
-                  {!Array.isArray(query.answer) && (
-                    <div className="border p-5 shadow-lg rounded-lg bg-amber-50 items-center">
-                      {query.answer}
-                    </div>
-                  )}
-                  {query.answer.length > 0 &&
-                    query.answer.map((value) => {
-                      return value.inlineData ? (
-                        <div className="flex max-w-fit border p-5 shadow-lg rounded-lg bg-amber-50 float-right items-center">
-                          <img
-                            src={`data:${value.inlineData.mimeType};base64,${value.inlineData.data}`}
-                            height={300}
-                            width={300}
-                          />
-                        </div>
-                      ) : value?.text ? (
-                        <div className="flex border p-5 shadow-lg rounded-lg bg-amber-50 items-center gap-3">
-                          <strong>Prompt:</strong> <p>{value?.text}</p>
-                        </div>
-                      ) : null;
-                    })}
+      <div className="bg-gradient-to-b from-pink-100 via-purple-200 to-blue-200 h-[500px] rounded-lg overflow-y-auto">
+        <div className="grid grid-cols-1 gap-5 mt-10 p-5 scroll-smooth md:scroll-auto">
+          {queryTxt &&
+            queryTxt.map((query) => (
+              <>
+                <div className="flex items-center gap-2">
+                  <span className="basis-3">
+                    <User2Icon />
+                  </span>
+                  :{" "}
+                  <span className="border p-5 shadow-lg rounded-lg bg-amber-50 justify-center items-center">
+                    {query.question}
+                  </span>
                 </div>
-              </div>
-            </>
-          ))}
+                <div className="flex h-auto items-center gap-2 flex-row-reverse float-end">
+                  <span className="basis-3">
+                    <Airplay />
+                  </span>
+                  :{" "}
+                  <div className="flex flex-col gap-3 items-end">
+                    {!Array.isArray(query.answer) && (
+                      <div className="border p-5 shadow-lg rounded-lg bg-amber-50 items-center">
+                        {query.answer}
+                      </div>
+                    )}
+                    {query.answer.length > 0 &&
+                      query.answer.map((value) => {
+                        return value.inlineData ? (
+                          <div className="flex max-w-fit border p-5 shadow-lg rounded-lg bg-amber-50 float-right items-center">
+                            <img
+                              src={`data:${value.inlineData.mimeType};base64,${value.inlineData.data}`}
+                              height={300}
+                              width={300}
+                            />
+                          </div>
+                        ) : query.answer.length === 1 && value?.text ? (
+                          <div className="flex border p-5 shadow-lg rounded-lg bg-amber-50 items-center gap-3">
+                            <p>{value?.text}</p>
+                          </div>
+                        ) : null;
+                      })}
+                  </div>
+                </div>
+              </>
+            ))}
+        </div>
       </div>
       <form onSubmit={dataSubmit}>
-        <div className="grid grid-cols-8 md:grid-cols-8 pt-10 gap-5">
-          <div className="col-span-7 flex justify-between items-center">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+          <div className="col-span-2 flex justify-between items-center">
             <Textarea
               value={textData}
               onChange={(e) => setTextData(e.target.value)}

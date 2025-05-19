@@ -81,7 +81,6 @@ function TextGeneration() {
       toast("Web Speech API is not available in this browser");
     } else if (isRecording) {
       stopSpeechToText();
-      setTextData("");
     } else {
       startSpeechToText();
     }
@@ -95,42 +94,44 @@ function TextGeneration() {
       });
       setTextData(str);
     }
-  }, [results]);
+  }, [results, interimResult]);
 
   return (
-    <div className="p-10 md:px-20 lg:px-32 text-gray-700">
+    <div className="grid grid-flow-row gap-5 p-10 md:px-20 lg:px-32 text-gray-700">
       <h2 className="font-bold text-3xl">Your AI Chat Bot</h2>
       <p>
         An AI chatbot is a smart virtual buddy you can chat with to get answers,
         ideas, or just have a conversation.
       </p>
-      <div className="flex gap-10 flex-col mt-10 p-10 bg-gradient-to-b from-pink-100 via-purple-200 to-blue-200 h-[500px] rounded-lg overflow-y-auto">
-        {queryTxt.map((query) => (
-          <>
-            <div className="flex h-auto items-center gap-2">
-              <span className="basis-3">
-                <User2Icon />
-              </span>
-              :{" "}
-              <span className="border p-5 shadow-lg rounded-lg bg-amber-50 justify-center items-center">
-                {query.question}
-              </span>
-            </div>
-            <div className="flex h-auto items-center gap-2 flex-row-reverse float-end">
-              <span className="basis-3">
-                <Airplay />
-              </span>
-              :{" "}
-              <pre className="border text-wrap p-5 shadow-lg rounded-lg bg-amber-50 justify-center items-center">
-                {query.answer}
-              </pre>
-            </div>
-          </>
-        ))}
+      <div className="bg-gradient-to-b from-pink-100 via-purple-200 to-blue-200 h-[500px] rounded-lg overflow-y-auto">
+        <div className="grid grid-cols-1 gap-5 mt-10 p-5 scroll-smooth md:scroll-auto">
+          {queryTxt.map((query) => (
+            <>
+              <div className="flex h-auto items-center gap-2">
+                <span className="basis-3">
+                  <User2Icon />
+                </span>
+                :{" "}
+                <span className="border p-5 shadow-lg rounded-lg bg-amber-50 justify-center items-center">
+                  {query.question}
+                </span>
+              </div>
+              <div className="flex items-center gap-2 flex-row-reverse float-end">
+                <span className="basis-3">
+                  <Airplay />
+                </span>
+                :{" "}
+                <pre className="border text-wrap p-5 shadow-lg rounded-lg bg-amber-50 justify-center items-center">
+                  {query.answer}
+                </pre>
+              </div>
+            </>
+          ))}
+        </div>
       </div>
       <form onSubmit={dataSubmit}>
-        <div className="grid grid-cols-8 md:grid-cols-8 pt-10 gap-5">
-          <div className="col-span-7 flex justify-between items-center">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+          <div className="col-span-2 flex justify-between items-center">
             <Textarea
               value={textData}
               onChange={(e) => setTextData(e.target.value)}
