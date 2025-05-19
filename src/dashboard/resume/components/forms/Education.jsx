@@ -24,7 +24,8 @@ function Education({ enableNext }) {
   const params = useParams();
 
   useEffect(() => {
-    resumeInfo && setEducationalList(resumeInfo?.education);
+    resumeInfo?.education.length > 0 &&
+      setEducationalList(resumeInfo?.education);
   }, []);
 
   useEffect(() => {
@@ -43,7 +44,17 @@ function Education({ enableNext }) {
   };
 
   const AddNewEducation = () => {
-    setEducationalList([...educationalList, formFields]);
+    setEducationalList([
+      ...educationalList,
+      {
+        universityName: "",
+        degree: "",
+        major: "",
+        startDate: "",
+        endDate: "",
+        description: "",
+      },
+    ]);
   };
   const RemoveEducation = () => {
     setEducationalList((educationalList) => educationalList.slice(0, -1));
@@ -78,7 +89,7 @@ function Education({ enableNext }) {
 
       <div>
         {educationalList.map((item, index) => (
-          <div>
+          <div key={index}>
             <div className="grid grid-cols-2 gap-3 border p-3 my-5 rounded-lg">
               <div className="col-span-2">
                 <label className="text-xs">University Name</label>

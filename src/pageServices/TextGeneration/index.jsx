@@ -18,18 +18,13 @@ function TextGeneration() {
   const [textData, setTextData] = useState("");
   const [queryTxt, setQueryTxt] = useState([]);
   const [content, setContent] = useState([]);
+  const [recordtxt, setRecordTxt] = useState([]);
 
-  const {
-    error,
-    interimResult,
-    isRecording,
-    results,
-    startSpeechToText,
-    stopSpeechToText,
-  } = useSpeechToText({
-    continuous: true,
-    useLegacyResults: false,
-  });
+  const { error, isRecording, results, startSpeechToText, stopSpeechToText } =
+    useSpeechToText({
+      continuous: true,
+      useLegacyResults: false,
+    });
 
   const dataSubmit = async (e) => {
     e.preventDefault();
@@ -66,6 +61,11 @@ function TextGeneration() {
       const filterData = queryTxt.find((data) => data.id === queryObj.id);
       filterData.answer = response;
       setQueryTxt([...queryTxt]);
+      setRecordTxt([]);
+      results.length = 0;
+      if (isRecording) {
+        stopSpeechToText();
+      }
     });
   };
 
@@ -73,6 +73,9 @@ function TextGeneration() {
     if (e.key === "Enter") {
       // Action to perform when Enter key is pressed
       await dataSubmit(e);
+      if (isRecording) {
+        stopSpeechToText();
+      }
     }
   };
 
@@ -87,14 +90,15 @@ function TextGeneration() {
   };
 
   useEffect(() => {
-    if (results) {
-      let str = "";
-      results.map((result) => {
-        str = str + result.transcript;
-      });
-      setTextData(str);
+    if (results.length > 0) {
+      const { transcript } = results[results.length - 1];
+      if (transcript && isRecording) {
+        recordtxt.push(results[results.length - 1].transcript);
+        setRecordTxt(recordtxt);
+        setTextData(recordtxt.join(" "));
+      }
     }
-  }, [results, interimResult]);
+  }, [results, recordtxt, isRecording]);
 
   return (
     <div className="grid grid-flow-row gap-5 p-10 md:px-20 lg:px-32 text-gray-700">

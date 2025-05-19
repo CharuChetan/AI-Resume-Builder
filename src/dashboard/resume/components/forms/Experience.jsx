@@ -34,7 +34,18 @@ function Experience({ enableNext }) {
   };
 
   const addNewExperience = () => {
-    setExperienceList([...experienceList, formFields]);
+    setExperienceList([
+      ...experienceList,
+      {
+        title: "",
+        companyName: "",
+        city: "",
+        state: "",
+        startDate: "",
+        endDate: "",
+        workSummery: "",
+      },
+    ]);
   };
 
   const removeExperience = () => {
