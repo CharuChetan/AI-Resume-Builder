@@ -31,7 +31,7 @@ function ResumeCardItem({ resume, refreshData }) {
   const onDelete = () => {
     setLoading(true);
     // Call the delete function here
-    DeleteResumeById(resume.documentId).then(
+    DeleteResumeById(resume.resumeId).then(
       (resp) => {
         // Handle success
         toast("Resume deleted successfully");
@@ -47,7 +47,7 @@ function ResumeCardItem({ resume, refreshData }) {
   };
   return (
     <div className="">
-      <Link to={"/dashboard/resume/" + resume.documentId + "/edit"}>
+      <Link to={`/dashboard/resume/${resume.resumeId}/edit`}>
         <div
           className="p-14  bg-gradient-to-b from-pink-100 via-purple-200 to-blue-200 h-[280px] rounded-t-lg border-t-4"
           style={{ borderColor: resume?.themeColor }}
@@ -72,18 +72,18 @@ function ResumeCardItem({ resume, refreshData }) {
           <DropdownMenuContent>
             <DropdownMenuItem
               onClick={() =>
-                navigate(`/dashboard/resume/${resume.documentId}/edit`)
+                navigate(`/dashboard/resume/${resume.resumeId}/edit`)
               }
             >
               Edit
             </DropdownMenuItem>
             <DropdownMenuItem
-              onClick={() => navigate(`/my-resume/${resume.documentId}/view`)}
+              onClick={() => navigate(`/my-resume/${resume.resumeId}/view`)}
             >
               View
             </DropdownMenuItem>
             <DropdownMenuItem
-              onClick={() => navigate(`/my-resume/${resume.documentId}/view`)}
+              onClick={() => navigate(`/my-resume/${resume.resumeId}/view`)}
             >
               Download
             </DropdownMenuItem>
@@ -103,7 +103,12 @@ function ResumeCardItem({ resume, refreshData }) {
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
-              <AlertDialogCancel onClick={() => setOpenAlert(false)}>
+              <AlertDialogCancel
+                onClick={() => {
+                  setOpenAlert(false);
+                  setLoading(false);
+                }}
+              >
                 Cancel
               </AlertDialogCancel>
               <AlertDialogAction disabled={loading} onClick={onDelete}>

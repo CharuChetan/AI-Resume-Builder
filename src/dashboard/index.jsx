@@ -14,7 +14,7 @@ function Dashboard() {
   const getUserList = useCallback(() => {
     GetAllResumes(user?.primaryEmailAddress?.emailAddress)
       .then((res) => {
-        setResumeList(res.data.data);
+        setResumeList(res.data.resumes);
       })
       .catch((err) => {
         console.log(err);

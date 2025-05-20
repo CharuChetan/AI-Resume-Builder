@@ -25,9 +25,7 @@ function Summery({ enableNext }) {
     e.preventDefault();
     setLoading(true);
     const data = {
-      data: {
-        summery: summery,
-      },
+      summery: summery,
     };
     UpdateResumeDetails(resumeId, data)
       .then((res) => {

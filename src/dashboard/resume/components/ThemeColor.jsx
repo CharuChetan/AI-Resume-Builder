@@ -50,9 +50,7 @@ function ThemeColor() {
       themeColor: color,
     });
     const data = {
-      data: {
-        themeColor: color,
-      },
+      themeColor: color,
     };
     UpdateResumeDetails(resumeId, data).then((resp) => {
       toast("Theme Color Updated");

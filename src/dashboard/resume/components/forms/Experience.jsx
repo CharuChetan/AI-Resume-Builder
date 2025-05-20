@@ -4,7 +4,10 @@ import React, { useContext, useEffect, useState } from "react";
 import RichTextEditor from "../RichTextEditor";
 import { ResumeInfoContext } from "@/context/ResumeInfoContext";
 import { useParams } from "react-router-dom";
-import { UpdateResumeDetails } from "../../../../../services/GlobalApi";
+import {
+  UpdateResumeDetails,
+  UpdateExperience,
+} from "../../../../../services/GlobalApi";
 import { toast } from "sonner";
 import { LoaderCircle } from "lucide-react";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -17,13 +20,16 @@ const formFields = {
   startDate: "",
   endDate: "",
   workSummery: "",
+  userResumeId: "",
 };
 
 function Experience({ enableNext }) {
-  const [experienceList, setExperienceList] = useState([formFields]);
+  const { resumeInfo, setResumeInfo } = useContext(ResumeInfoContext);
+  const [experienceList, setExperienceList] = useState([
+    { ...formFields, userResumeId: resumeInfo.id },
+  ]);
   const [loading, setLoading] = useState(false);
   const params = useParams();
-  const { resumeInfo, setResumeInfo } = useContext(ResumeInfoContext);
 
   const [isExperince, setIsExpreince] = useState(resumeInfo.isExperince);
 
@@ -46,6 +52,7 @@ function Experience({ enableNext }) {
         startDate: "",
         endDate: "",
         workSummery: "",
+        userResumeId: resumeInfo.id,
       },
     ]);
   };
@@ -58,12 +65,12 @@ function Experience({ enableNext }) {
   };
 
   useEffect(() => {
-    resumeInfo?.experience.length > 0 &&
-      setExperienceList(resumeInfo?.experience);
+    resumeInfo?.experiences.length > 0 &&
+      setExperienceList(resumeInfo?.experiences);
   }, []);
 
   useEffect(() => {
-    setResumeInfo({ ...resumeInfo, experience: experienceList });
+    setResumeInfo({ ...resumeInfo, experiences: experienceList });
   }, [experienceList]);
 
   useEffect(() => {
@@ -87,14 +94,9 @@ function Experience({ enableNext }) {
 
   const onSave = () => {
     setLoading(true);
-    const data = {
-      data: {
-        experience: experienceList.map(({ id, ...rest }) => rest),
-        isExperince: isExperince,
-      },
-    };
-
-    UpdateResumeDetails(params?.resumeId, data).then(
+    const data = experienceList.map(({ id, ...rest }) => rest);
+    UpdateResumeDetails(params?.resumeId, { isExperince: isExperince ? 1 : 0 });
+    UpdateExperience(params?.resumeId, data).then(
       (res) => {
         setLoading(false);
         enableNext(true);

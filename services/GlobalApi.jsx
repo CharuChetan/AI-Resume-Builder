@@ -10,17 +10,24 @@ const axiosClient = axios.create({
 
 const CreateNewResume = (data) => axiosClient.post("user-resumes", data);
 const GetAllResumes = (userEmail) =>
-  axiosClient.get(
-    `user-resumes?sort=updatedAt:desc&filters[userEmail][$eq]=${userEmail}`
-  );
+  axiosClient.get(`user-resumes/email/${userEmail}`);
 
 const UpdateResumeDetails = (id, data) =>
   axiosClient.put(`user-resumes/${id}`, data);
 
-const GetResumeById = (id) => axiosClient.get(`user-resumes/${id}?populate=*`);
+const GetResumeById = (id) => axiosClient.get(`user-resumes/${id}`);
 const DeleteResumeById = (id) => axiosClient.delete(`user-resumes/${id}`);
 
 const CreateQuery = (data) => axiosClient.post("user-queries", data);
+
+//Experince queries
+const UpdateExperience = (id, data) =>
+  axiosClient.put(`experiences/${id}`, data);
+
+//Education queries
+const UpdateEducation = (id, data) => axiosClient.put(`educations/${id}`, data);
+//Skills queries
+const UpdateSkills = (id, data) => axiosClient.put(`skills/${id}`, data);
 
 export {
   CreateNewResume,
@@ -29,4 +36,7 @@ export {
   GetResumeById,
   DeleteResumeById,
   CreateQuery,
+  UpdateExperience,
+  UpdateEducation,
+  UpdateSkills,
 };

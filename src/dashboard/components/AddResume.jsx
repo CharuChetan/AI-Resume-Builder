@@ -24,18 +24,16 @@ function AddResume() {
     setLoading(true);
     const uuid = uuidv4();
     const data = {
-      data: {
-        title: resumeTitle,
-        resumeId: uuid,
-        userEmail: user?.primaryEmailAddress?.emailAddress,
-        userName: user?.fullName,
-      },
+      title: resumeTitle,
+      resumeId: uuid,
+      userEmail: user?.primaryEmailAddress?.emailAddress,
+      userName: user?.fullName,
     };
     CreateNewResume(data)
       .then((res) => {
         if (res) {
           setLoading(false);
-          navigate(`/dashboard/resume/${res?.data?.data?.documentId}/edit`);
+          navigate(`/dashboard/resume/${res?.data?.resume?.resumeId}/edit`);
         }
       })
       .catch((err) => {

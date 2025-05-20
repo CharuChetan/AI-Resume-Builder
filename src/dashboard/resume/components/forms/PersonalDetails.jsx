@@ -23,9 +23,7 @@ function PersonalDetails({ enableNext }) {
   const onSave = (e) => {
     e.preventDefault();
     setLoading(true);
-    const data = {
-      data: formData,
-    };
+    const data = formData;
     UpdateResumeDetails(resumeId, data)
       .then((res) => {
         setLoading(false);

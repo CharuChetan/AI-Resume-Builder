@@ -5,20 +5,24 @@ import "@smastrom/react-rating/style.css";
 import { Button } from "@/components/ui/button";
 import { LoaderCircle } from "lucide-react";
 import { ResumeInfoContext } from "@/context/ResumeInfoContext";
-import { UpdateResumeDetails } from "../../../../../services/GlobalApi";
+import {
+  UpdateResumeDetails,
+  UpdateSkills,
+} from "../../../../../services/GlobalApi";
 import { useParams } from "react-router-dom";
 import { toast } from "sonner";
 import { Checkbox } from "@/components/ui/checkbox";
 
 function Skills({ enableNext }) {
+  const { resumeInfo, setResumeInfo } = useContext(ResumeInfoContext);
   const [skillsList, setSkillsList] = useState([
     {
       name: "",
       rating: 0,
+      userResumeId: resumeInfo.id,
     },
   ]);
 
-  const { resumeInfo, setResumeInfo } = useContext(ResumeInfoContext);
   const { resumeId } = useParams();
   const [isSkill, setSkill] = useState(resumeInfo.isSkill);
   const [loading, setLoading] = useState(false);
@@ -44,6 +48,7 @@ function Skills({ enableNext }) {
       {
         name: "",
         rating: 0,
+        userResumeId: resumeInfo.id,
       },
     ]);
   };
@@ -53,14 +58,10 @@ function Skills({ enableNext }) {
 
   const onSave = () => {
     setLoading(true);
-    const data = {
-      data: {
-        skills: skillsList.map(({ id, ...rest }) => rest),
-        isSkill: isSkill,
-      },
-    };
+    const data = skillsList.map(({ id, ...rest }) => rest);
 
-    UpdateResumeDetails(resumeId, data).then(
+    UpdateResumeDetails(resumeId, { isSkill: isSkill ? 1 : 0 });
+    UpdateSkills(resumeId, data).then(
       (resp) => {
         setLoading(false);
         enableNext(true);

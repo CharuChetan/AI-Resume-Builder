@@ -5,7 +5,10 @@ import { ResumeInfoContext } from "@/context/ResumeInfoContext";
 import { LoaderCircle } from "lucide-react";
 import React, { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { UpdateResumeDetails } from "../../../../../services/GlobalApi";
+import {
+  UpdateResumeDetails,
+  UpdateEducation,
+} from "../../../../../services/GlobalApi";
 import { toast } from "sonner";
 import { Checkbox } from "@/components/ui/checkbox";
 
@@ -16,24 +19,27 @@ const formFields = {
   startDate: "",
   endDate: "",
   description: "",
+  userResumeId: "",
 };
 
 function Education({ enableNext }) {
-  const [loading, setLoading] = useState(false);
-  const [educationalList, setEducationalList] = useState([formFields]);
   const { resumeInfo, setResumeInfo } = useContext(ResumeInfoContext);
+  const [loading, setLoading] = useState(false);
+  const [educationalList, setEducationalList] = useState([
+    { ...formFields, userResumeId: resumeInfo.id },
+  ]);
   const [isEducation, setIsEducation] = useState(resumeInfo.isEducation);
   const params = useParams();
 
   useEffect(() => {
-    resumeInfo?.education.length > 0 &&
-      setEducationalList(resumeInfo?.education);
+    resumeInfo?.educations.length > 0 &&
+      setEducationalList(resumeInfo?.educations);
   }, []);
 
   useEffect(() => {
     setResumeInfo({
       ...resumeInfo,
-      education: educationalList,
+      educations: educationalList,
     });
   }, [educationalList]);
 
@@ -59,6 +65,7 @@ function Education({ enableNext }) {
         startDate: "",
         endDate: "",
         description: "",
+        userResumeId: resumeInfo.id,
       },
     ]);
   };
@@ -68,14 +75,10 @@ function Education({ enableNext }) {
 
   const onSave = () => {
     setLoading(true);
-    const data = {
-      data: {
-        education: educationalList.map(({ id, ...rest }) => rest),
-        isEducation: isEducation,
-      },
-    };
+    const data = educationalList.map(({ id, ...rest }) => rest);
 
-    UpdateResumeDetails(params.resumeId, data).then(
+    UpdateResumeDetails(params?.resumeId, { isEducation: isEducation ? 1 : 0 });
+    UpdateEducation(params.resumeId, data).then(
       (resp) => {
         setLoading(false);
         enableNext(true);

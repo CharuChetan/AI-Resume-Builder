@@ -31,14 +31,14 @@ function RichTextEditor({ onRichTextEditorChange, index, defaultValue }) {
 
   const GenerateSummeryFromAI = async () => {
     try {
-      if (!resumeInfo?.experience[index]?.title) {
+      if (!resumeInfo?.experiences[index]?.title) {
         toast("Please Add Position Title");
         return;
       }
       setLoading(true);
       const prompt = PROMPT.replace(
         "{positionTitle}",
-        resumeInfo.experience[index].title
+        resumeInfo.experiences[index].title
       );
 
       const result = await AiModal(prompt);
