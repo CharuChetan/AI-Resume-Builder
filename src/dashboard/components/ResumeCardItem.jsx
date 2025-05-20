@@ -103,7 +103,12 @@ function ResumeCardItem({ resume, refreshData }) {
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
-              <AlertDialogCancel onClick={() => setOpenAlert(false)}>
+              <AlertDialogCancel
+                onClick={() => {
+                  setOpenAlert(false);
+                  setLoading(false);
+                }}
+              >
                 Cancel
               </AlertDialogCancel>
               <AlertDialogAction disabled={loading} onClick={onDelete}>
