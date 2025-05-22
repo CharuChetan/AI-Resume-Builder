@@ -4,13 +4,14 @@ const axiosClient = axios.create({
   baseURL: `${import.meta.env.VITE_BASE_URL}/api/`,
   headers: {
     "Content-Type": "application/json",
-    Authorization: `Bearer ${import.meta.env.VITE_STRAPI_API_KEY}`,
+    Authorization: `Bearer ${sessionStorage.getItem("token")}`,
   },
 });
 
 const CreateNewResume = (data) => axiosClient.post("user-resumes", data);
-const GetAllResumes = (userEmail) =>
-  axiosClient.get(`user-resumes/email/${userEmail}`);
+const GetAllResumes = (userEmail) => {
+  return axiosClient.get(`user-resumes/email/${userEmail}`);
+};
 
 const UpdateResumeDetails = (id, data) =>
   axiosClient.put(`user-resumes/${id}`, data);
@@ -29,6 +30,8 @@ const UpdateEducation = (id, data) => axiosClient.put(`educations/${id}`, data);
 //Skills queries
 const UpdateSkills = (id, data) => axiosClient.put(`skills/${id}`, data);
 
+const GetAuthToken = (id) => axiosClient.get(`user-resumes/auth/${id}`);
+
 export {
   CreateNewResume,
   GetAllResumes,
@@ -39,4 +42,5 @@ export {
   UpdateExperience,
   UpdateEducation,
   UpdateSkills,
+  GetAuthToken,
 };
