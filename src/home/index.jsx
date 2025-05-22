@@ -1,9 +1,18 @@
 import Header from "@/components/custom/Header";
-import { UserButton } from "@clerk/clerk-react";
+import { UserButton, useUser } from "@clerk/clerk-react";
 import { AtomIcon, Edit, Share2 } from "lucide-react";
-import React from "react";
+import React, { useEffect } from "react";
+import { GetAuthToken } from "../../services/GlobalApi";
 
 function Home() {
+  const { user } = useUser();
+  useEffect(() => {
+    if (user && user.fullName) {
+      GetAuthToken(user.fullName).then((res) => {
+        sessionStorage.setItem("token", res.data.getToken);
+      });
+    }
+  }, [user]);
   return (
     <div>
       <Header />

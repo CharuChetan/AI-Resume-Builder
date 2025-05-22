@@ -12,7 +12,8 @@ function App() {
     if (!isSignedIn && isLoaded) {
       return <Navigate to="/auth/sign-in" />;
     } else {
-      if (user && user.fullName) {
+      const getToken = sessionStorage.getItem("token");
+      if (!getToken && user && user.fullName) {
         GetAuthToken(user.fullName).then((res) => {
           sessionStorage.setItem("token", res.data.getToken);
         });
