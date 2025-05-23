@@ -9,7 +9,7 @@ import {
   UpdateExperience,
 } from "../../../../../services/GlobalApi";
 import { toast } from "sonner";
-import { LoaderCircle } from "lucide-react";
+import { CircleMinus, LoaderCircle } from "lucide-react";
 import { Checkbox } from "@/components/ui/checkbox";
 
 const formFields = {
@@ -26,12 +26,12 @@ const formFields = {
 function Experience({ enableNext }) {
   const { resumeInfo, setResumeInfo } = useContext(ResumeInfoContext);
   const [experienceList, setExperienceList] = useState([
-    { ...formFields, userResumeId: resumeInfo.id },
+    { ...formFields, userResumeId: resumeInfo?.id },
   ]);
   const [loading, setLoading] = useState(false);
   const params = useParams();
 
-  const [isExperince, setIsExpreince] = useState(resumeInfo.isExperince);
+  const [isExperince, setIsExpreince] = useState(resumeInfo?.isExperince);
 
   const handleInputChange = (index, event) => {
     enableNext(false);
@@ -52,15 +52,16 @@ function Experience({ enableNext }) {
         startDate: "",
         endDate: "",
         workSummery: "",
-        userResumeId: resumeInfo.id,
+        userResumeId: resumeInfo?.id,
       },
     ]);
   };
 
-  const removeExperience = () => {
+  const removeExperience = (id) => {
     if (experienceList.length > 1) {
-      const updatedExperienceList = experienceList.slice(0, -1);
-      setExperienceList(updatedExperienceList);
+      const list = [...experienceList];
+      list.splice(id, 1);
+      setExperienceList([...list]);
     }
   };
 
@@ -87,7 +88,13 @@ function Experience({ enableNext }) {
 
   const handleCheckboxChange = (index, name, checked) => {
     enableNext(false);
-    const newEntries = experienceList.slice();
+    let newEntries = experienceList.slice();
+    newEntries = newEntries.map((element) => {
+      if (element[name]) {
+        element[name] = false;
+      }
+      return element;
+    });
     newEntries[index][name] = checked;
     setExperienceList(newEntries);
   };
@@ -133,7 +140,16 @@ function Experience({ enableNext }) {
         </div>
         {experienceList.map((item, index) => (
           <div key={index}>
-            <div className="grid grid-col-2 gap-3 border p-3 rounded-lg my-5">
+            <div className="grid grid-col-2 gap-3 border p-3 rounded-lg my-5 overflow-auto">
+              <div className="flex justify-end items-end col-span-2">
+                <Button
+                  variant="outline"
+                  onClick={() => removeExperience(index)}
+                  className="text-primary p-0 border-0 shadow-none"
+                >
+                  <CircleMinus />
+                </Button>
+              </div>
               <div>
                 <label className="text-xs">Position Title</label>
                 <Input
@@ -217,13 +233,6 @@ function Experience({ enableNext }) {
               onClick={addNewExperience}
             >
               + Add More Experience
-            </Button>
-            <Button
-              variant={"outline"}
-              className="text-primary"
-              onClick={removeExperience}
-            >
-              - Remove
             </Button>
           </div>
           <Button disabled={loading} onClick={() => onSave()}>

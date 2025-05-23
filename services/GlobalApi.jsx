@@ -1,12 +1,42 @@
 import axios from "axios";
+import { jwtDecode } from "jwt-decode";
+import { useAuth } from "@clerk/clerk-react";
 
+const token = sessionStorage.getItem("token") ?? "";
 const axiosClient = axios.create({
   baseURL: `${import.meta.env.VITE_BASE_URL}/api/`,
   headers: {
     "Content-Type": "application/json",
-    Authorization: `Bearer ${sessionStorage.getItem("token")}`,
   },
 });
+
+axiosClient.interceptors.request.use(
+  async (config) => {
+    const token = sessionStorage.getItem("token");
+    if (token) {
+      const decodedToken = jwtDecode(token);
+      const isExpired = decodedToken.exp * 1000 < Date.now();
+      if (isExpired) {
+        try {
+          const { signOut } = useAuth();
+          sessionStorage.clear();
+          signOut();
+        } catch (error) {
+          console.error("Error refreshing token:", error);
+          sessionStorage.clear();
+          window.location.href = "/";
+          return Promise.reject(error);
+        }
+      } else {
+        config.headers.Authorization = `Bearer ${token}`;
+      }
+    }
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
 
 const CreateNewResume = (data) => axiosClient.post("user-resumes", data);
 const GetAllResumes = (userEmail) => {

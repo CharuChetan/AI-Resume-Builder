@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { ResumeInfoContext } from "@/context/ResumeInfoContext";
-import { LoaderCircle } from "lucide-react";
+import { CircleMinus, LoaderCircle } from "lucide-react";
 import React, { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import {
@@ -65,12 +65,16 @@ function Education({ enableNext }) {
         startDate: "",
         endDate: "",
         description: "",
-        userResumeId: resumeInfo.id,
+        userResumeId: resumeInfo?.id,
       },
     ]);
   };
-  const RemoveEducation = () => {
-    setEducationalList((educationalList) => educationalList.slice(0, -1));
+  const RemoveEducation = async (id) => {
+    if (educationalList.length > 0) {
+      const list = [...educationalList];
+      list.splice(id, 1);
+      setEducationalList([...list]);
+    }
   };
 
   const onSave = () => {
@@ -116,12 +120,21 @@ function Education({ enableNext }) {
         {educationalList.map((item, index) => (
           <div key={index}>
             <div className="grid grid-cols-2 gap-3 border p-3 my-5 rounded-lg">
+              <div className="flex justify-end items-end col-span-2">
+                <Button
+                  variant="outline"
+                  onClick={() => RemoveEducation(index)}
+                  className="text-primary p-0 border-0 shadow-none"
+                >
+                  <CircleMinus />
+                </Button>
+              </div>
               <div className="col-span-2">
                 <label className="text-xs">University Name</label>
                 <Input
                   name="universityName"
                   onChange={(e) => handleChange(e, index)}
-                  defaultValue={item?.universityName}
+                  value={item?.universityName}
                 />
               </div>
               <div>
@@ -178,13 +191,6 @@ function Education({ enableNext }) {
             className="text-primary"
           >
             + Add More Education
-          </Button>
-          <Button
-            variant="outline"
-            onClick={RemoveEducation}
-            className="text-primary"
-          >
-            - Remove
           </Button>
         </div>
         <Button disabled={loading} onClick={() => onSave()}>

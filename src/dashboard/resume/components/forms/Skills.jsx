@@ -3,7 +3,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { Rating } from "@smastrom/react-rating";
 import "@smastrom/react-rating/style.css";
 import { Button } from "@/components/ui/button";
-import { LoaderCircle } from "lucide-react";
+import { CircleMinus, LoaderCircle } from "lucide-react";
 import { ResumeInfoContext } from "@/context/ResumeInfoContext";
 import {
   UpdateResumeDetails,
@@ -52,8 +52,11 @@ function Skills({ enableNext }) {
       },
     ]);
   };
-  const RemoveSkills = () => {
-    setSkillsList((skillsList) => skillsList.slice(0, -1));
+  const RemoveSkills = (id) => {
+    const list = [...skillsList];
+    list.splice(id, 1);
+    setSkillsList([...list]);
+    //setSkillsList((skillsList) => skillsList.slice(0, -1));
   };
 
   const onSave = () => {
@@ -103,12 +106,12 @@ function Skills({ enableNext }) {
       </div>
       <div>
         {skillsList.map((item, index) => (
-          <div className="flex justify-between mb-2 border rounded-lg p-3 ">
+          <div className="flex justify-between mb-2 border rounded-lg p-3 gap-3 items-center">
             <div>
               <label className="text-xs">Name</label>
               <Input
                 className="w-full"
-                defaultValue={item.name}
+                value={item.name}
                 onChange={(e) => handleChange(index, "name", e.target.value)}
               />
             </div>
@@ -117,6 +120,15 @@ function Skills({ enableNext }) {
               value={item.rating}
               onChange={(v) => handleChange(index, "rating", v)}
             />
+            <div className="flex justify-center items-center">
+              <Button
+                variant="outline"
+                onClick={() => RemoveSkills(index)}
+                className="text-primary p-0 border-0 shadow-none"
+              >
+                <CircleMinus />
+              </Button>
+            </div>
           </div>
         ))}
       </div>
@@ -128,13 +140,6 @@ function Skills({ enableNext }) {
             className="text-primary"
           >
             + Add More Skill
-          </Button>
-          <Button
-            variant="outline"
-            onClick={RemoveSkills}
-            className="text-primary"
-          >
-            - Remove
           </Button>
         </div>
         <Button disabled={loading} onClick={() => onSave()}>

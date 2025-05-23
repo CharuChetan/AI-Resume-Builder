@@ -5,7 +5,7 @@ function EducationalPreview({ resumeInfo }) {
     const date = new Date(dateString);
     const year = date.getFullYear();
     const month = date.toLocaleString("default", { month: "short" }); // Full month name
-    return `${month} ${year}`;
+    return month && year ? `${month} ${year}` : "";
   };
 
   return (

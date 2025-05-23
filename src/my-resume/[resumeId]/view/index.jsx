@@ -2,14 +2,15 @@ import Header from "@/components/custom/Header";
 import { Button } from "@/components/ui/button";
 import { ResumeInfoContext } from "@/context/ResumeInfoContext";
 import ResumePreview from "@/dashboard/resume/components/ResumePreview";
-import { Download, Share } from "lucide-react";
+import { Download, Edit, Share } from "lucide-react";
 import React, { useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { GetResumeById } from "../../../../services/GlobalApi";
 import { RWebShare } from "react-web-share";
 
 function ViewResume() {
   const [resumeInfo, setResumeInfo] = React.useState(null);
+  const navigate = useNavigate();
   const { resumeId } = useParams();
   const GetResumeInfo = () => {
     GetResumeById(resumeId).then((res) => {
@@ -33,7 +34,7 @@ function ViewResume() {
             Now you are ready to download your resume and you can share your
             unique resume url with your friends and family
           </p>
-          <div className="flex justify-between my-10 px-44">
+          <div className="flex justify-between my-10">
             <Button onClick={() => window.print()}>
               <Download />
               Download
@@ -58,6 +59,12 @@ function ViewResume() {
         <div id="print-area">
           <ResumePreview />
         </div>
+      </div>
+      <div className="flex justify-center items-center mb-10">
+        <Button onClick={() => navigate(`/dashboard/resume/${resumeId}/edit`)}>
+          <Edit />
+          Edit
+        </Button>
       </div>
     </ResumeInfoContext.Provider>
   );

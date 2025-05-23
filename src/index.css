@@ -11,10 +11,20 @@
   #print-start {
     margin: 0;
     padding: 0;
+    box-shadow: none !important;
+  }
+
+  #print-start div {
+    box-shadow: none !important;
   }
 
   #print-area {
     display: block;
+    -webkit-filter: drop-shadow(0 10px 15px -3px);
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+    -webkit-filter: opacity(1);
+    filter: opacity(1);
   }
 
   body {

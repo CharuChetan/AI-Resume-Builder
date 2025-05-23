@@ -9,17 +9,17 @@ import { useEffect } from "react";
 function App() {
   const { isSignedIn, isLoaded, user } = useUser();
   useEffect(() => {
-    if (!isSignedIn && isLoaded) {
-      return <Navigate to="/auth/sign-in" />;
-    } else {
-      const getToken = sessionStorage.getItem("token");
-      if (!getToken && user && user.fullName) {
-        GetAuthToken(user.fullName).then((res) => {
-          sessionStorage.setItem("token", res.data.getToken);
-        });
-      }
+    const getToken = sessionStorage.getItem("token");
+    if (!getToken && user && user.fullName) {
+      GetAuthToken(user.fullName).then((res) => {
+        sessionStorage.setItem("token", res.data.getToken);
+      });
     }
   }, [isLoaded, isSignedIn, user]);
+
+  if (!isSignedIn && isLoaded) {
+    return <Navigate to="/auth/sign-in" />;
+  }
 
   return (
     <>

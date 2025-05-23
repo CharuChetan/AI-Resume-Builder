@@ -203,7 +203,7 @@ function Home() {
               <AtomIcon className="h-8 w-8" />
 
               <h2 className="mt-4 text-xl font-bold text-black">
-                Write promot for your form
+                Write prompt for your form
               </h2>
 
               <p className="mt-1 text-sm text-gray-600">

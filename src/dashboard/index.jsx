@@ -44,8 +44,8 @@ function Dashboard() {
             </div>
             <div className="border p-3 flex justify-between text-white rounded-b-lg shadow-lg">
               <div className="space-y-2">
-                <Skeleton className="h-2 w-[250px]" />
-                <Skeleton className="h-2 w-[200px]" />
+                <Skeleton className="h-2 w-[250px] md:w-[100px]" />
+                <Skeleton className="h-2 w-[200px] md:w-[50px]" />
               </div>
             </div>
           </div>

@@ -13,6 +13,7 @@ import Contect from "./contact";
 import TextGeneration from "./pageServices/TextGeneration";
 import VideoGeneration from "./pageServices/VideoGeneration";
 import ImageGeneration from "./pageServices/ImageGeneration";
+import ErrorPage from "./error";
 
 // Import your Publishable Key
 const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY;
@@ -67,6 +68,10 @@ const router = createBrowserRouter([
   {
     path: "/contact",
     element: <Contect />,
+  },
+  {
+    path: "*",
+    element: <ErrorPage />,
   },
 ]);
 
