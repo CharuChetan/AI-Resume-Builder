@@ -34,9 +34,13 @@
   }
 }
 
+@page:first {
+  margin: 0mm;
+}
+
 @page {
   size: auto;
-  margin: 0mm;
+  margin: 10mm; /* Set your desired margin for second and subsequent pages */
 }
 
 .rsw-ce ul {
